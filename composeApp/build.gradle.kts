@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -34,6 +33,7 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -48,6 +48,12 @@ kotlin {
             implementation(libs.decompose.extension)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.lifecycle)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor)
+            implementation(libs.ktor.client.core)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
     }
 }

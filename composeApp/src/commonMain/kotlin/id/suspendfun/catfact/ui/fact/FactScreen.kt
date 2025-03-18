@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import catfact.composeapp.generated.resources.Res
 import catfact.composeapp.generated.resources.fact_favorite_list
 import catfact.composeapp.generated.resources.fact_length
@@ -50,17 +51,17 @@ import id.suspendfun.catfact.navigation.factcomponent.FactEvent
 import id.suspendfun.catfact.theme.AppColors
 import id.suspendfun.catfact.util.catImageUrl
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun FactScreen(
     component: FactComponent,
+    viewModel: FactViewModel = koinViewModel(),
 ) {
-    val factUiState = FactUiState.Success(
-        FactUiData(fact = "cat is animal", length = 15, isFavorite = false)
-    )
-    val currentFact = FactUiData(fact = "cat is animal", length = 15, isFavorite = false)
-    val hasMultipleCats = true
-    val isUpdateButtonEnabled = true
+    val factUiState = viewModel.factUiState.collectAsStateWithLifecycle().value
+    val currentFact = viewModel.currentFactResponse.collectAsStateWithLifecycle().value
+    val hasMultipleCats = viewModel.hasMultipleCats.collectAsStateWithLifecycle().value
+    val isUpdateButtonEnabled = factUiState !is FactUiState.Loading
 
     val lifecycleOwner = LocalLifecycleOwner.current
     val lifecycleState = lifecycleOwner.lifecycle.currentStateFlow.collectAsState().value
@@ -84,7 +85,7 @@ fun FactScreen(
             currentFact = currentFact,
             isUpdateButtonEnabled = isUpdateButtonEnabled,
             updateFact = {
-
+                viewModel.updateFact()
             },
             saveFactToFavorite = {
 
